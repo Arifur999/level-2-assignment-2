@@ -3,7 +3,6 @@ import { vehicleService } from "./vehicle.service";
 
 
 export const createVehicle = async (req: Request, res: Response) => {
-    console.log("✅ /api/v1/vehicles route hit hocche, body:", req.body);
     try {
     const vehicle = await vehicleService.createVehicle(req.body);
 
@@ -13,10 +12,37 @@ export const createVehicle = async (req: Request, res: Response) => {
       data: vehicle,
     });
   } catch (error: any) {
-    console.error("❌ Vehicle create error:", error); 
     return res.status(500).json({
       success: false,
       message: error.message || "Failed to create vehicle",
+    });
+  }
+};
+
+
+export const getAllVehicles = async (req: Request, res: Response) => {
+    try {
+    const vehicle = await vehicleService.getAllVehicles();
+
+
+if (vehicle.length===0) {
+   return res.status(201).json({
+      success: true,
+      message: "no Vehicle found ",
+      data: [],
+    });
+}
+  return res.status(200).json({
+      success: true,
+      message: "all Vehicles ",
+      data: vehicle
+    });
+
+   
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      message: error.message ,
     });
   }
 };
@@ -27,4 +53,5 @@ export const createVehicle = async (req: Request, res: Response) => {
 export const vehicleControllers={
 
 createVehicle,
+getAllVehicles
 }

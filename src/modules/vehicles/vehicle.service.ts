@@ -30,7 +30,7 @@ const getAllVehicles = async () => {
     `
   );
 
-  return result.rows[0];
+  return result.rows;
 };
 
 export const vehicleService={
