@@ -15,11 +15,25 @@ const{vehicle_name,type,registration_number,daily_rent_price,availability_status
     `,
     [vehicle_name, type, registration_number, daily_rent_price, availability_status]
   );
-   return result;
+   return result.rows[0];
+
 
 
 }
 
+const getAllVehicles = async () => {
+  const result = await pool.query(
+    `
+    SELECT id, vehicle_name, type, registration_number, daily_rent_price, availability_status
+    FROM vehicles
+    ORDER BY id
+    `
+  );
+
+  return result.rows[0];
+};
+
 export const vehicleService={
     createVehicle,
+    getAllVehicles,
 }

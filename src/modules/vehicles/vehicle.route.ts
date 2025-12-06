@@ -1,9 +1,8 @@
 import express from "express"
-import { vehicleControllers } from "./vehicle.controller";
+import { createVehicle } from "./vehicle.controller";
 
 
 const router=express.Router();
-router.post("/",vehicleControllers.createVehicle)
-
+router.post("/", createVehicle);
 
 export const vehicleRoutes=router;

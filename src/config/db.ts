@@ -23,7 +23,7 @@ const initDB=async()=>{
 await pool.query(`
         CREATE TABLE IF NOT EXISTS vehicles (
   id SERIAL PRIMARY KEY,
-  vehicles_name VARCHAR(100) NOT NULL,
+  vehicle_name VARCHAR(100) NOT NULL,
   type VARCHAR(20) NOT NULL CHECK (type IN('car', 'bike', 'van', 'SUV')),
   registration_number VARCHAR(20) NOT NULL UNIQUE,
   daily_rent_price NUMERIC(10,2) NOT NULL CHECK (daily_rent_price > 0),
