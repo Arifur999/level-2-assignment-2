@@ -6,6 +6,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = __importDefault(require("./app"));
 const config_1 = __importDefault(require("./config"));
 const PORT = config_1.default.port;
+app_1.default.get('/', (req, res) => {
+    res.json({
+        message: "Welcome to the Vehicle Rental API!",
+        status: "success"
+    });
+});
 app_1.default.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
