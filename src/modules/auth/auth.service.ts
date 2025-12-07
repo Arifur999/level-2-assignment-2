@@ -1,5 +1,3 @@
-// src/modules/auth/auth.service.ts
-
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { pool } from "../../config/db";
@@ -28,14 +26,11 @@ const signup = async (payload: SignupPayload) => {
     `,
     [name, email.toLowerCase(), hashedPass, phone, role]
   );
-
-
   return result.rows[0];
 };
 
 const signin = async (payload: SigninPayload) => {
   const { email, password } = payload;
-
 
   const result = await pool.query(
     `
@@ -52,12 +47,10 @@ const signin = async (payload: SigninPayload) => {
 
   const user = result.rows[0];
 
-  // password check
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
     throw new Error("Invalid email or password");
   }
-
 
   const token = jwt.sign(
     {
