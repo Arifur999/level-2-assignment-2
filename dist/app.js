@@ -1,0 +1,22 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
+const db_1 = __importDefault(require("./config/db"));
+const user_routes_1 = require("./modules/users/user.routes");
+const vehicle_route_1 = require("./modules/vehicles/vehicle.route");
+const booking_route_1 = require("./modules/bookings/booking.route");
+const auth_route_1 = require("./modules/auth/auth.route");
+const app = (0, express_1.default)();
+(0, db_1.default)();
+app.use((0, cors_1.default)());
+app.use(express_1.default.json());
+app.use("/api/v1/auth", auth_route_1.authRoutes);
+app.use("/api/v1/users", user_routes_1.userRoutes);
+app.use("/api/v1/auth/signup", user_routes_1.userRoutes);
+app.use("/api/v1/vehicles", vehicle_route_1.vehicleRoutes);
+app.use("/api/v1/bookings", booking_route_1.bookingRoutes);
+exports.default = app;
