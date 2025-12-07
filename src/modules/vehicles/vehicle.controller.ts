@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { vehicleService } from "./vehicle.service";
 
-
-export const createVehicle = async (req: Request, res: Response) => {
-    try {
+// POST 
+const createVehicle = async (req: Request, res: Response) => {
+  try {
     const vehicle = await vehicleService.createVehicle(req.body);
 
     return res.status(201).json({
@@ -12,75 +12,116 @@ export const createVehicle = async (req: Request, res: Response) => {
       data: vehicle,
     });
   } catch (error: any) {
-    return res.status(500).json({
+    return res.status(400).json({
       success: false,
       message: error.message || "Failed to create vehicle",
     });
   }
 };
 
+// GET 
+const getAllVehicles = async (req: Request, res: Response) => {
+  try {
+    const vehicles = await vehicleService.getAllVehicles();
 
-export const getAllVehicles = async (req: Request, res: Response) => {
-    try {
-    const vehicle = await vehicleService.getAllVehicles();
+    if (vehicles.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: "No vehicles found",
+        data: [],
+      });
+    }
 
-
-if (vehicle.length===0) {
-   return res.status(201).json({
+    return res.status(200).json({
       success: true,
-      message: "no Vehicle found ",
-      data: [],
+      message: "Vehicles retrieved successfully",
+      data: vehicles,
     });
-}
-  return res.status(200).json({
-      success: true,
-      message: "all Vehicles ",
-      data: vehicle
-    });
-
-   
   } catch (error: any) {
     return res.status(500).json({
       success: false,
-      message: error.message ,
+      message: error.message || "Failed to retrieve vehicles",
     });
   }
 };
 
-export const updateVehicle = async (req: Request, res: Response) => {
+// GET 
+const getVehicleByIdController = async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.vehicleId);
+
+    if (isNaN(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid vehicle id",
+      });
+    }
+
+    const vehicle = await vehicleService.getVehicleById(id);
+
+    if (!vehicle) {
+      return res.status(404).json({
+        success: false,
+        message: "Vehicle not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Vehicle retrieved successfully",
+      data: vehicle,
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Failed to retrieve vehicle",
+    });
+  }
+};
+
+// PUT
+ const updateVehicle = async (req: Request, res: Response) => {
+  try {
+    const id = Number(req.params.vehicleId);
+
+    if (isNaN(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid vehicle id",
+      });
+    }
+
     const updated = await vehicleService.updateVehicle(id, req.body);
 
     if (!updated) {
       return res.status(404).json({
         success: false,
-        message: "Vehicle not found"
+        message: "Vehicle not found",
       });
     }
 
     return res.status(200).json({
       success: true,
       message: "Vehicle updated successfully",
-      data: updated
+      data: updated,
     });
-
   } catch (error: any) {
-    res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Failed to update vehicle",
+    });
   }
 };
 
-
-
-export const deleteVehicle = async (req: Request, res: Response) => {
+// DELETE 
+ const deleteVehicle = async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.vehicleId);
 
-  
     if (isNaN(id)) {
       return res.status(400).json({
         success: false,
-        message: "Invalid vehicle ID",
+        message: "Invalid vehicle id",
       });
     }
 
@@ -97,21 +138,20 @@ export const deleteVehicle = async (req: Request, res: Response) => {
       success: true,
       message: "Vehicle deleted successfully",
     });
-
   } catch (error: any) {
     return res.status(400).json({
       success: false,
-      message: error.message,  
+      message: error.message || "Failed to delete vehicle",
     });
   }
 };
-
 
 
 export const vehicleControllers={
 
 createVehicle,
 getAllVehicles,
+getVehicleByIdController,
 updateVehicle,
 deleteVehicle
 }

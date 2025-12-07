@@ -5,7 +5,7 @@ import { bookingController } from "./booking.controller";
 const router=express.Router();
 router.post("/",bookingController.createBooking)
 router.get("/",bookingController.getBookings)
-router.post("/",bookingController.updateBooking)
+router.put("/",bookingController.updateBooking)
 
 
 export const bookingRoutes=router;

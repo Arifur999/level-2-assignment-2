@@ -1,11 +1,15 @@
-import express from "express"
-import { createVehicle, deleteVehicle, getAllVehicles, updateVehicle } from "./vehicle.controller";
 
 
-const router=express.Router();
-router.post("/", createVehicle);
-router.get("/",getAllVehicles);
-router.put("/:vehicleId",updateVehicle);
-router.delete("/:vehicleId",deleteVehicle)
+import express from "express";
+import { vehicleControllers } from "./vehicle.controller";
 
-export const vehicleRoutes=router;
+
+const router = express.Router();
+
+router.post("/", vehicleControllers.createVehicle);               // POST /api/v1/vehicles
+router.get("/", vehicleControllers.getAllVehicles);               // GET  /api/v1/vehicles
+router.get("/:vehicleId", vehicleControllers.getVehicleByIdController); // GET /api/v1/vehicles/:vehicleId
+router.put("/:vehicleId", vehicleControllers.updateVehicle);      // PUT  /api/v1/vehicles/:vehicleId
+router.delete("/:vehicleId", vehicleControllers.deleteVehicle);   // DEL  /api/v1/vehicles/:vehicleId
+
+export const vehicleRoutes = router;

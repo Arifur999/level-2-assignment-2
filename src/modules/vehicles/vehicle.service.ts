@@ -1,7 +1,12 @@
-import { pool } from "../../config/db";
-import { CreateVehiclePayload, UpdateVehiclePayload } from "./vehicle.interface";
+// src/modules/vehicles/vehicle.service.ts
 
-//post
+import { pool } from "../../config/db";
+import {
+  CreateVehiclePayload,
+  UpdateVehiclePayload,
+} from "./vehicle.interface";
+
+// CREATE vehicle
 const createVehicle = async (payload: CreateVehiclePayload) => {
   const {
     vehicle_name,
@@ -23,7 +28,7 @@ const createVehicle = async (payload: CreateVehiclePayload) => {
   return result.rows[0];
 };
 
-//get all
+// GET all vehicles
 const getAllVehicles = async () => {
   const result = await pool.query(
     `
@@ -36,20 +41,20 @@ const getAllVehicles = async () => {
   return result.rows;
 };
 
-//single id
+// GET vehicle by ID
 const getVehicleById = async (id: number) => {
   const result = await pool.query(
-    `SELECT id, vehicle_name, type, registration_number, daily_rent_price, availability_status FROM vehicles WHERE id = $1`,
+    `SELECT id, vehicle_name, type, registration_number, daily_rent_price, availability_status 
+     FROM vehicles WHERE id = $1`,
     [id]
   );
+
   return result.rows[0] || null;
 };
 
-
-//put
+// UPDATE vehicle
 const updateVehicle = async (id: number, payload: UpdateVehiclePayload) => {
   const existing = await getVehicleById(id);
-
   if (!existing) return null;
 
   const updated = {
@@ -57,8 +62,7 @@ const updateVehicle = async (id: number, payload: UpdateVehiclePayload) => {
     type: payload.type ?? existing.type,
     registration_number:
       payload.registration_number ?? existing.registration_number,
-    daily_rent_price:
-      payload.daily_rent_price ?? existing.daily_rent_price,
+    daily_rent_price: payload.daily_rent_price ?? existing.daily_rent_price,
     availability_status:
       payload.availability_status ?? existing.availability_status,
   };
@@ -87,8 +91,9 @@ const updateVehicle = async (id: number, payload: UpdateVehiclePayload) => {
   return result.rows[0];
 };
 
-//delete
+// DELETE vehicle
 const deleteVehicle = async (id: number) => {
+  // check for active bookings
   const activeBookings = await pool.query(
     `SELECT id FROM bookings WHERE vehicle_id = $1 AND status = 'active'`,
     [id]
